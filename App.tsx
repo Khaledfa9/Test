@@ -259,6 +259,22 @@ const App: React.FC = () => {
         showToast('Log deleted!', 'success');
     };
 
+    const handleResetWeek = () => {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        setHistory(prev => {
+            const updatedHistory = prev.filter(log => new Date(log.isoDate) >= sevenDaysAgo);
+            if (updatedHistory.length === prev.length) {
+                showToast("No logs older than 7 days to clear.", 'info');
+            } else {
+                showToast('Logs older than 7 days have been cleared!', 'success');
+            }
+            return updatedHistory;
+        });
+    };
+
     const handleSaveExtractedMeals = (newMeals: Meal[]) => {
         setMeals(prev => [...prev, ...newMeals]);
         setView('meals');
@@ -317,7 +333,12 @@ const App: React.FC = () => {
                     onAddMeal={() => setView('meals')}
                 />;
             case 'history':
-                return <History history={sortedHistory} onDeleteLog={handleDeleteHistoryLog} />;
+                return <History 
+                    history={sortedHistory} 
+                    onDeleteLog={handleDeleteHistoryLog} 
+                    goals={goals}
+                    onResetWeek={handleResetWeek}
+                />;
             case 'meals':
                 return <MealList 
                     meals={meals} 

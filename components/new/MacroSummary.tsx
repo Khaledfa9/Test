@@ -14,6 +14,8 @@ const MacroBar: React.FC<{
 }> = ({ label, value, goal, color }) => {
     const percentage = goal > 0 ? (value / goal) * 100 : 0;
     const displayPercentage = Math.min(percentage, 100);
+    const isOver = value > goal;
+    const remaining = Math.abs(goal - value);
 
     return (
         <div>
@@ -23,10 +25,15 @@ const MacroBar: React.FC<{
             </div>
             <div className="bg-border rounded-full h-2 w-full overflow-hidden">
                 <div 
-                    className={`${color} h-2 rounded-full transition-all duration-500`} 
+                    className={`${isOver ? 'bg-danger' : color} h-2 rounded-full transition-all duration-500`} 
                     style={{ width: `${displayPercentage}%` }}
                 ></div>
             </div>
+             <p className={`text-right text-xs mt-1 font-medium ${isOver ? 'text-danger' : 'text-text-secondary'}`}>
+                {isOver 
+                    ? `${Math.round(remaining)}g over` 
+                    : `${Math.round(remaining)}g left`}
+            </p>
         </div>
     );
 };

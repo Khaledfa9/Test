@@ -78,7 +78,9 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
                 </div>
             </div>
              <p className="text-lg font-semibold text-text-primary mt-2">{label}</p>
-             <p className={`text-sm font-semibold -mt-1 ${isOver ? 'text-danger' : 'text-text-secondary'}`}>{Math.round(goal-value)} remaining</p>
+             <p className={`text-sm font-semibold -mt-1 ${isOver ? 'text-danger' : 'text-text-secondary'}`}>
+                {isOver ? `${Math.round(value - goal)} over` : `${Math.round(goal - value)} remaining`}
+             </p>
         </div>
     );
 };

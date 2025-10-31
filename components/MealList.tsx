@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Meal } from '../types';
+import { Meal, MealCategory } from '../types';
 import Icon from './common/Icon';
 import Modal from './common/Modal';
 import FAB from './new/FAB';
-import MealGridItem from './new/MealGridItem';
+import MealListItem from './new/MealListItem';
+import CollapsibleSection from './new/CollapsibleSection';
 
 interface MealListProps {
     meals: Meal[];
@@ -26,6 +27,24 @@ const MealList: React.FC<MealListProps> = ({ meals, onAddMeal, onEditMeal, onDel
             )
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [meals, searchTerm]);
+
+    const groupedMeals = useMemo(() => {
+        return filteredMeals.reduce((acc, meal) => {
+            const category = meal.category;
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            acc[category].push(meal);
+            return acc;
+        }, {} as Record<MealCategory, Meal[]>);
+    }, [filteredMeals]);
+
+    const categoryOrder: MealCategory[] = [
+        MealCategory.Breakfast,
+        MealCategory.Lunch,
+        MealCategory.Dinner,
+        MealCategory.Snacks,
+    ];
 
     const handleConfirmDelete = () => {
         if (mealToDelete) {
@@ -59,17 +78,34 @@ const MealList: React.FC<MealListProps> = ({ meals, onAddMeal, onEditMeal, onDel
 
             <div>
                 {filteredMeals.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        {filteredMeals.map(meal => (
-                           <MealGridItem 
-                             key={meal.id} 
-                             meal={meal} 
-                             onTrackMeal={onTrackMeal}
-                             onToggleMainMeal={onToggleMainMeal}
-                             onEditMeal={onEditMeal}
-                             onDeleteMeal={() => setMealToDelete(meal)}
-                           />
-                        ))}
+                    <div className="space-y-4">
+                        {categoryOrder.map(category => {
+                            const mealsInCategory = groupedMeals[category];
+                            if (!mealsInCategory || mealsInCategory.length === 0) {
+                                return null;
+                            }
+                            
+                            return (
+                                <CollapsibleSection
+                                    key={category}
+                                    title={category}
+                                    summary={`${mealsInCategory.length} item${mealsInCategory.length > 1 ? 's' : ''}`}
+                                >
+                                    <div className="space-y-2 pt-2">
+                                        {mealsInCategory.map(meal => (
+                                            <MealListItem
+                                                key={meal.id}
+                                                meal={meal}
+                                                onTrackMeal={onTrackMeal}
+                                                onToggleMainMeal={onToggleMainMeal}
+                                                onEdit={() => onEditMeal(meal)}
+                                                onDelete={() => setMealToDelete(meal)}
+                                            />
+                                        ))}
+                                    </div>
+                                </CollapsibleSection>
+                            );
+                        })}
                     </div>
                 ) : (
                      <div className="text-center py-20 text-text-secondary bg-background rounded-2xl">
