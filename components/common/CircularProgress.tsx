@@ -32,7 +32,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
     const overOffset = circumference - (overPercentage / 100) * circumference;
 
     return (
-        <div className="flex flex-col items-center justify-center gap-1">
+        <div className="flex flex-col items-center justify-center gap-2">
             <div className="relative" style={{ width: size, height: size }}>
                 <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
                     <circle
@@ -77,8 +77,8 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
                     <span className="text-sm text-text-secondary">/ {goal} kcal</span>
                 </div>
             </div>
-             <p className="text-lg font-semibold text-text-primary mt-2">{label}</p>
-             <p className={`text-sm font-semibold -mt-1 ${isOver ? 'text-danger' : 'text-text-secondary'}`}>
+             <p className="text-lg font-semibold text-text-primary">{label}</p>
+             <p className={`text-base font-medium ${isOver ? 'text-danger' : 'text-primary'}`}>
                 {isOver ? `${Math.round(value - goal)} over` : `${Math.round(goal - value)} remaining`}
              </p>
         </div>

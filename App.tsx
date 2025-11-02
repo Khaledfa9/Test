@@ -13,13 +13,14 @@ import MealExtractor from './components/MealExtractor';
 import Toast from './components/common/Toast';
 import { seedMeals } from './data/seedMeals';
 import Icon from './components/common/Icon';
+import QuickAddMeal from './components/QuickAddMeal';
 
 const API_KEY = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
 const DEFAULT_GOALS: DailyGoals = { calories: 2000, protein: 150, carbs: 200, fat: 60 };
 
 const App: React.FC = () => {
     const [theme, setTheme] = useTheme();
-    const [accent, setAccent] = useLocalStorage<string>('accentColor', 'green');
+    const [accent, setAccent] = useLocalStorage<string>('accentColor', 'ruby');
     const [view, setView] = useState<View>('dashboard');
     const [meals, setMeals] = useLocalStorage<Meal[]>('meals', seedMeals);
     const [history, setHistory] = useLocalStorage<HistoryLog[]>('history', []);
@@ -33,6 +34,7 @@ const App: React.FC = () => {
 
     const [mealToEdit, setMealToEdit] = useState<Meal | undefined>(undefined);
     const [toast, setToast] = useState<ToastState>({ show: false, message: '', type: 'info' });
+    const [showQuickAdd, setShowQuickAdd] = useState(false);
 
     // CRITICAL FIX: This refactored effect handles new day logic and goal synchronization
     // without causing an infinite loop. It uses a functional update for `setTodaysLog`
@@ -288,12 +290,14 @@ const App: React.FC = () => {
     };
 
     const handleTrackAllMainMeals = () => {
-        const mainMeals = meals.filter(m => m.isMainMeal);
-        if (mainMeals.length === 0) {
+        const mainMealsToAdd = meals.filter(m => m.isMainMeal);
+
+        if (mainMealsToAdd.length === 0) {
             showToast("You haven't marked any meals as 'main'.", 'info');
             return;
         }
-        const newTrackedMeals: TrackedMeal[] = mainMeals.map(meal => {
+
+        const newTrackedMeals: TrackedMeal[] = mainMealsToAdd.map(meal => {
             const scale = meal.defaultWeight / 100;
             return {
                 id: crypto.randomUUID(),
@@ -304,13 +308,23 @@ const App: React.FC = () => {
                 protein: Math.round(meal.proteinPer100g * scale),
                 carbs: Math.round(meal.carbsPer100g * scale),
                 fat: Math.round(meal.fatPer100g * scale),
-                eaten: true,
+                eaten: false, // Add meals as uneaten by default
                 category: meal.category,
                 imageUrl: meal.imageUrl,
             };
         });
-        updateTodaysMealsAndConsumed(prevMeals => [...prevMeals, ...newTrackedMeals]);
-        showToast(`${mainMeals.length} main meals added!`, 'success');
+        
+        // Un-favorite the meals in the main list after adding them
+        setMeals(prevMeals => 
+            prevMeals.map(meal => 
+                meal.isMainMeal ? { ...meal, isMainMeal: false } : meal
+            )
+        );
+        
+        // Add the new, uneaten meals to today's log
+        updateTodaysMealsAndConsumed(prev => [...prev, ...newTrackedMeals]);
+
+        showToast(`${mainMealsToAdd.length} main meals added!`, 'success');
     };
 
     const renderView = () => {
@@ -324,13 +338,12 @@ const App: React.FC = () => {
                 return <Dashboard 
                     todaysLog={todaysLog}
                     history={sortedHistory}
-                    onQuickAddMeal={handleQuickAddMeal}
+                    meals={meals}
                     onRemoveTrackedMeal={handleRemoveTrackedMeal}
                     onSaveDay={handleSaveDay}
                     onToggleEaten={handleToggleEaten}
                     onUpdateWeight={handleUpdateWeight}
                     onTrackAllMainMeals={handleTrackAllMainMeals}
-                    onAddMeal={() => setView('meals')}
                 />;
             case 'history':
                 return <History 
@@ -342,7 +355,7 @@ const App: React.FC = () => {
             case 'meals':
                 return <MealList 
                     meals={meals} 
-                    onAddMeal={() => setView('addMeal')} 
+                    onAddMeal={() => setView('addMeal')}
                     onEditMeal={handleEditMeal} 
                     onDeleteMeal={handleDeleteMeal} 
                     onImportMeals={() => setView('mealExtractor')} 
@@ -369,13 +382,12 @@ const App: React.FC = () => {
                 return <Dashboard 
                     todaysLog={todaysLog}
                     history={sortedHistory}
-                    onQuickAddMeal={handleQuickAddMeal}
+                    meals={meals}
                     onRemoveTrackedMeal={handleRemoveTrackedMeal}
                     onSaveDay={handleSaveDay}
                     onToggleEaten={handleToggleEaten}
                     onUpdateWeight={handleUpdateWeight}
                     onTrackAllMainMeals={handleTrackAllMainMeals}
-                    onAddMeal={() => setView('meals')}
                 />;
         }
     };
@@ -414,7 +426,7 @@ const App: React.FC = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="p-4 pt-8 pb-28 min-h-screen"
+                        className="p-4 pt-8 pb-36 min-h-screen"
                     >
                         {renderView()}
                     </motion.main>
@@ -423,8 +435,9 @@ const App: React.FC = () => {
 
 
             {!hideNavViews.includes(view) && (
-                 <BottomNav currentView={view} onChangeView={setView} />
+                 <BottomNav currentView={view} onChangeView={setView} onQuickAddClick={() => setShowQuickAdd(true)} />
             )}
+            {showQuickAdd && <QuickAddMeal onAdd={handleQuickAddMeal} onClose={() => setShowQuickAdd(false)} />}
             <Toast {...toast} onClose={() => setToast(prev => ({ ...prev, show: false }))} />
         </div>
     );

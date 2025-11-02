@@ -156,7 +156,7 @@ const AddMealForm: React.FC<AddMealFormProps> = ({ onSave, onCancel, existingMea
                         <Icon name="food" className="w-16 h-16 text-text-secondary/50" />
                     )}
                      <button type="button" onClick={handleGenerateImage} disabled={isGeneratingImage || !formState.name} className="absolute bottom-4 right-4 bg-primary text-white px-4 py-2.5 rounded-full font-semibold flex items-center space-x-2 disabled:bg-gray-400 shadow-lg">
-                        <Icon name="camera" className="w-5 h-5" />
+                        <Icon name="sparkles" className="w-5 h-5" />
                         <span>{isGeneratingImage ? 'Generating...' : 'Generate'}</span>
                     </button>
                 </div>
@@ -185,7 +185,7 @@ const AddMealForm: React.FC<AddMealFormProps> = ({ onSave, onCancel, existingMea
                 
                 <div className="grid grid-cols-3 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-text-secondary px-1">Protein</label>
+                        <label className="block text-sm font-medium text-text-secondary px-1">Proteins</label>
                         <input type="number" name="protein" value={formState.protein} onChange={handleChange} className="mt-1 block w-full px-4 py-3 bg-background border-2 border-border rounded-xl"/>
                     </div>
                      <div>
@@ -193,7 +193,7 @@ const AddMealForm: React.FC<AddMealFormProps> = ({ onSave, onCancel, existingMea
                         <input type="number" name="carbs" value={formState.carbs} onChange={handleChange} className="mt-1 block w-full px-4 py-3 bg-background border-2 border-border rounded-xl"/>
                     </div>
                      <div>
-                        <label className="block text-sm font-medium text-text-secondary px-1">Fat</label>
+                        <label className="block text-sm font-medium text-text-secondary px-1">Fats</label>
                         <input type="number" name="fat" value={formState.fat} onChange={handleChange} className="mt-1 block w-full px-4 py-3 bg-background border-2 border-border rounded-xl"/>
                     </div>
                 </div>

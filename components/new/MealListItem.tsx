@@ -5,13 +5,14 @@ import Icon from '../common/Icon';
 
 interface MealListItemProps {
     meal: Meal;
+    onSelect: () => void;
     onTrackMeal?: (meal: Meal, weight: number) => void;
     onToggleMainMeal: (id: string) => void;
     onEdit: () => void;
     onDelete: () => void;
 }
 
-const MealListItem: React.FC<MealListItemProps> = ({ meal, onTrackMeal, onToggleMainMeal, onEdit, onDelete }) => {
+const MealListItem: React.FC<MealListItemProps> = ({ meal, onSelect, onTrackMeal, onToggleMainMeal, onEdit, onDelete }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -25,13 +26,18 @@ const MealListItem: React.FC<MealListItemProps> = ({ meal, onTrackMeal, onToggle
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [menuRef]);
 
+    const handleActionClick = (e: React.MouseEvent, action: () => void) => {
+        e.stopPropagation();
+        action();
+    }
+
     const menuActions = [
         { label: 'Edit', icon: 'edit' as const, action: onEdit },
         { label: 'Delete', icon: 'delete' as const, action: onDelete, danger: true },
     ];
 
     return (
-        <div className="bg-background p-3 rounded-2xl flex items-center space-x-4">
+        <div onClick={onSelect} className="bg-background p-3 rounded-2xl flex items-center space-x-4 cursor-pointer hover:bg-border/50 transition-colors">
             <div className="w-16 h-16 bg-border rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
                 {meal.imageUrl ? (
                     <img src={meal.imageUrl} alt={meal.name} className="w-full h-full object-cover" />
@@ -45,7 +51,7 @@ const MealListItem: React.FC<MealListItemProps> = ({ meal, onTrackMeal, onToggle
             </div>
             <div className="flex items-center space-x-1 flex-shrink-0" ref={menuRef}>
                 <button 
-                    onClick={() => onToggleMainMeal(meal.id)} 
+                    onClick={(e) => handleActionClick(e, () => onToggleMainMeal(meal.id))} 
                     className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors ${meal.isMainMeal ? 'text-yellow-400' : 'text-text-secondary hover:text-yellow-400'}`}
                     aria-label={meal.isMainMeal ? "Unmark as main meal" : "Mark as main meal"}
                 >
@@ -53,7 +59,7 @@ const MealListItem: React.FC<MealListItemProps> = ({ meal, onTrackMeal, onToggle
                 </button>
                 {onTrackMeal && (
                      <button 
-                        onClick={() => onTrackMeal(meal, meal.defaultWeight)} 
+                        onClick={(e) => handleActionClick(e, () => onTrackMeal(meal, meal.defaultWeight))} 
                         className="w-9 h-9 flex items-center justify-center rounded-full text-primary hover:bg-primary/10"
                         aria-label={`Track ${meal.name}`}
                      >
@@ -62,7 +68,7 @@ const MealListItem: React.FC<MealListItemProps> = ({ meal, onTrackMeal, onToggle
                 )}
                 <div className="relative">
                     <button 
-                        onClick={() => setMenuOpen(!menuOpen)} 
+                        onClick={(e) => handleActionClick(e, () => setMenuOpen(!menuOpen))} 
                         className="w-9 h-9 flex items-center justify-center rounded-full text-text-secondary hover:bg-border"
                         aria-label="More options"
                     >
@@ -80,7 +86,7 @@ const MealListItem: React.FC<MealListItemProps> = ({ meal, onTrackMeal, onToggle
                                 {menuActions.map(item => (
                                      <button 
                                         key={item.label} 
-                                        onClick={() => { item.action(); setMenuOpen(false); }} 
+                                        onClick={(e) => handleActionClick(e, () => { item.action(); setMenuOpen(false); })}
                                         className={`w-full text-left px-4 py-2 text-sm flex items-center space-x-3 ${item.danger ? 'text-danger hover:bg-danger/10' : 'text-text-primary hover:bg-background'}`}
                                      >
                                         <Icon name={item.icon} className="w-4 h-4" />

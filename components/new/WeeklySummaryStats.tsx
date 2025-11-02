@@ -58,9 +58,9 @@ const WeeklySummaryStats: React.FC<WeeklySummaryStatsProps> = ({ stats }) => {
 
             <div className="grid grid-cols-2 gap-3">
                 <StatCard icon="calories" label="Calories" avg={averages.calories} total={totals.calories} unit="kcal" />
-                <StatCard icon="protein" label="Protein" avg={averages.protein} total={totals.protein} unit="g" />
+                <StatCard icon="proteins" label="Proteins" avg={averages.protein} total={totals.protein} unit="g" />
                 <StatCard icon="carbs" label="Carbs" avg={averages.carbs} total={totals.carbs} unit="g" />
-                <StatCard icon="fat" label="Fat" avg={averages.fat} total={totals.fat} unit="g" />
+                <StatCard icon="fats" label="Fats" avg={averages.fat} total={totals.fat} unit="g" />
             </div>
         </div>
     );

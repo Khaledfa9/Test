@@ -2,9 +2,10 @@ import React, { useState, useMemo } from 'react';
 import { Meal, MealCategory } from '../types';
 import Icon from './common/Icon';
 import Modal from './common/Modal';
-import FAB from './new/FAB';
 import MealListItem from './new/MealListItem';
 import CollapsibleSection from './new/CollapsibleSection';
+import MealDetail from './MealDetail';
+import { AnimatePresence } from 'framer-motion';
 
 interface MealListProps {
     meals: Meal[];
@@ -19,6 +20,7 @@ interface MealListProps {
 const MealList: React.FC<MealListProps> = ({ meals, onAddMeal, onEditMeal, onDeleteMeal, onImportMeals, onTrackMeal, onToggleMainMeal }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [mealToDelete, setMealToDelete] = useState<Meal | null>(null);
+    const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
 
     const filteredMeals = useMemo(() => {
         return meals
@@ -52,17 +54,26 @@ const MealList: React.FC<MealListProps> = ({ meals, onAddMeal, onEditMeal, onDel
             setMealToDelete(null);
         }
     };
-    
-    const fabActions = [
-        { label: 'Add New Meal', icon: 'add' as const, action: onAddMeal },
-        { label: 'Import from File', icon: 'upload' as const, action: onImportMeals },
-    ];
 
     return (
         <div className="space-y-6">
             <header className="px-2">
-                 <p className="text-text-secondary">Your Collection</p>
-                <h1 className="text-4xl font-bold text-text-primary tracking-tighter">My Meals</h1>
+                 <div className="flex justify-between items-start">
+                    <div>
+                        <p className="text-text-secondary">Your Collection</p>
+                        <h1 className="text-4xl font-bold text-text-primary tracking-tighter">My Meals</h1>
+                    </div>
+                    <div className="flex items-center space-x-2 mt-2">
+                         <button onClick={onImportMeals} className="flex items-center space-x-2 px-3 py-2 text-sm font-semibold text-text-primary bg-background rounded-lg hover:bg-border transition-colors">
+                            <Icon name="upload" className="w-4 h-4" />
+                            <span>Import</span>
+                        </button>
+                        <button onClick={onAddMeal} className="flex items-center space-x-2 px-3 py-2 text-sm font-semibold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors">
+                            <Icon name="add" className="w-4 h-4" />
+                            <span>Add Meal</span>
+                        </button>
+                    </div>
+                </div>
             </header>
             
             <div className="relative">
@@ -96,6 +107,7 @@ const MealList: React.FC<MealListProps> = ({ meals, onAddMeal, onEditMeal, onDel
                                             <MealListItem
                                                 key={meal.id}
                                                 meal={meal}
+                                                onSelect={() => setSelectedMeal(meal)}
                                                 onTrackMeal={onTrackMeal}
                                                 onToggleMainMeal={onToggleMainMeal}
                                                 onEdit={() => onEditMeal(meal)}
@@ -110,7 +122,7 @@ const MealList: React.FC<MealListProps> = ({ meals, onAddMeal, onEditMeal, onDel
                 ) : (
                      <div className="text-center py-20 text-text-secondary bg-background rounded-2xl">
                         <p>No meals found.</p>
-                        <p className="text-sm">Tap the '+' to add your first meal.</p>
+                        <p className="text-sm">Tap the 'Add Meal' button to create your first one.</p>
                     </div>
                 )}
             </div>
@@ -123,7 +135,18 @@ const MealList: React.FC<MealListProps> = ({ meals, onAddMeal, onEditMeal, onDel
                 </div>
             </Modal>
             
-            <FAB actions={fabActions} />
+            <AnimatePresence>
+                {selectedMeal && onTrackMeal && (
+                    <MealDetail 
+                        meal={selectedMeal}
+                        onClose={() => setSelectedMeal(null)}
+                        onTrackMeal={(weight) => {
+                            onTrackMeal(selectedMeal, weight);
+                            setSelectedMeal(null);
+                        }}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 };

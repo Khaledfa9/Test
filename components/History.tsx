@@ -74,9 +74,9 @@ const History: React.FC<HistoryProps> = ({ history, onDeleteLog, goals, onResetW
                     <p className="text-text-secondary">Your Progress</p>
                     <h1 className="text-4xl font-bold text-text-primary tracking-tighter">History</h1>
                 </div>
-                 <button onClick={onResetWeek} className="flex items-center space-x-2 px-3 py-2 text-sm font-semibold text-text-secondary bg-background rounded-lg hover:bg-border transition-colors">
-                    <Icon name="reset" className="w-4 h-4" />
-                    <span>Reset Week</span>
+                 <button onClick={onResetWeek} className="flex items-center space-x-2 px-3 py-2 text-sm font-semibold text-text-secondary bg-background rounded-lg hover:bg-danger/10 hover:text-danger transition-colors">
+                    <Icon name="delete" className="w-4 h-4" />
+                    <span>Clear Old</span>
                 </button>
             </header>
             

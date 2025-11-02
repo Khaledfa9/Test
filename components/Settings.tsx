@@ -13,10 +13,14 @@ interface SettingsProps {
 }
 
 const accentColors = [
-    { id: 'green', name: 'Mint Green', color: 'rgb(74, 192, 124)' },
-    { id: 'blue', name: 'Sky Blue', color: 'rgb(59, 130, 246)' },
-    { id: 'rose', name: 'Dusty Rose', color: 'rgb(244, 63, 94)' },
-    { id: 'violet', name: 'Soft Violet', color: 'rgb(139, 92, 246)' },
+    { id: 'green', name: 'Aqua', color: '#71C9CE' },
+    { id: 'blue', name: 'Sky', color: '#A0D2EB' },
+    { id: 'rose', name: 'Salmon', color: '#F9B4AB' },
+    { id: 'violet', name: 'Lavender', color: '#C3B1E1' },
+    { id: 'gold', name: 'Gold', color: '#FDEB9E' },
+    { id: 'teal', name: 'Teal', color: '#006A67' },
+    { id: 'slate', name: 'Slate', color: '#5D688A' },
+    { id: 'ruby', name: 'Ruby', color: '#DA6C6C' },
 ];
 
 const InputField: React.FC<{ 
@@ -72,9 +76,9 @@ const Settings: React.FC<SettingsProps> = ({ currentGoals, onSaveGoals, theme, s
                 <h2 className="text-xl font-bold text-text-primary px-2">Daily Goals</h2>
                 <div className="grid grid-cols-2 gap-3">
                     <InputField label="Calories (kcal)" name="calories" icon="calories" value={goals.calories} onChange={handleChange} />
-                    <InputField label="Protein (g)" name="protein" icon="protein" value={goals.protein} onChange={handleChange} />
+                    <InputField label="Proteins (g)" name="protein" icon="proteins" value={goals.protein} onChange={handleChange} />
                     <InputField label="Carbs (g)" name="carbs" icon="carbs" value={goals.carbs} onChange={handleChange} />
-                    <InputField label="Fat (g)" name="fat" icon="fat" value={goals.fat} onChange={handleChange} />
+                    <InputField label="Fats (g)" name="fat" icon="fats" value={goals.fat} onChange={handleChange} />
                 </div>
                  <div className="pt-2">
                     <button onClick={handleSave} className="w-full bg-primary text-white px-4 py-3 rounded-xl font-semibold hover:bg-primary-accent transition-colors">
@@ -105,7 +109,7 @@ const Settings: React.FC<SettingsProps> = ({ currentGoals, onSaveGoals, theme, s
                     </div>
                      <div className="p-4 bg-background rounded-xl">
                         <span className="text-text-primary font-medium">Accent Color</span>
-                        <div className="mt-3 flex space-x-3">
+                        <div className="mt-3 flex flex-wrap gap-3">
                             {accentColors.map((color) => (
                                 <button
                                     key={color.id}

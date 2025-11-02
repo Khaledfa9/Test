@@ -22,6 +22,9 @@
                         'danger': 'rgb(var(--color-danger) / <alpha-value>)',
                         'info': 'rgb(var(--color-info) / <alpha-value>)',
                         'warning': 'rgb(var(--color-warning) / <alpha-value>)',
+                        'carbs': 'rgb(var(--color-carbs) / <alpha-value>)',
+                        'protein': 'rgb(var(--color-protein) / <alpha-value>)',
+                        'fat': 'rgb(var(--color-fat) / <alpha-value>)',
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -61,6 +64,9 @@
                 --color-danger: 239 68 68;
                 --color-info: 59 130 246;
                 --color-warning: 245 158 11;
+                --color-carbs: 180 212 184;
+                --color-protein: 160 210 235;
+                --color-fat: 255 252 171;
             }
             .dark {
                 /* Base Dark Theme Colors */
@@ -73,20 +79,35 @@
                 --color-danger: 220 50 50;
                 --color-info: 60 130 230;
                 --color-warning: 200 130 10;
+                --color-carbs: 180 212 184;
+                --color-protein: 138 192 222;
+                --color-fat: 242 239 158;
             }
 
             /* Accent Color Themes */
-            .theme-green { --color-primary: 74 192 124; --color-primary-accent: 90 205 140; }
-            .dark.theme-green { --color-primary: 52 160 100; --color-primary-accent: 74 192 124; }
+            .theme-green { --color-primary: 113 201 206; --color-primary-accent: 100 180 185; }
+            .dark.theme-green { --color-primary: 90 180 185; --color-primary-accent: 113 201 206; }
 
-            .theme-blue { --color-primary: 59 130 246; --color-primary-accent: 80 150 250; }
-            .dark.theme-blue { --color-primary: 60 130 230; --color-primary-accent: 80 150 250; }
+            .theme-blue { --color-primary: 160 210 235; --color-primary-accent: 140 190 215; }
+            .dark.theme-blue { --color-primary: 138 192 222; --color-primary-accent: 160 210 235; }
 
-            .theme-rose { --color-primary: 244 63 94; --color-primary-accent: 248 85 115; }
-            .dark.theme-rose { --color-primary: 225 50 80; --color-primary-accent: 244 63 94; }
+            .theme-rose { --color-primary: 249 180 171; --color-primary-accent: 230 160 150; }
+            .dark.theme-rose { --color-primary: 230 160 150; --color-primary-accent: 249 180 171; }
 
-            .theme-violet { --color-primary: 139 92 246; --color-primary-accent: 155 110 250; }
-            .dark.theme-violet { --color-primary: 120 80 220; --color-primary-accent: 139 92 246; }
+            .theme-violet { --color-primary: 195 177 225; --color-primary-accent: 175 157 205; }
+            .dark.theme-violet { --color-primary: 175 157 205; --color-primary-accent: 195 177 225; }
+
+            .theme-gold { --color-primary: 253 235 158; --color-primary-accent: 228 211 143; }
+            .dark.theme-gold { --color-primary: 228 211 143; --color-primary-accent: 253 235 158; }
+
+            .theme-teal { --color-primary: 0 106 103; --color-primary-accent: 0 95 92; }
+            .dark.theme-teal { --color-primary: 0 95 92; --color-primary-accent: 0 106 103; }
+
+            .theme-slate { --color-primary: 93 104 138; --color-primary-accent: 83 93 124; }
+            .dark.theme-slate { --color-primary: 83 93 124; --color-primary-accent: 93 104 138; }
+
+            .theme-ruby { --color-primary: 218 108 108; --color-primary-accent: 200 90 90; }
+            .dark.theme-ruby { --color-primary: 200 90 90; --color-primary-accent: 218 108 108; }
 
             body {
                 -webkit-tap-highlight-color: transparent;
