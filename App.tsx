@@ -15,7 +15,6 @@ import { seedMeals } from './data/seedMeals';
 import Icon from './components/common/Icon';
 import QuickAddMeal from './components/QuickAddMeal';
 
-const API_KEY = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
 const DEFAULT_GOALS: DailyGoals = { calories: 2000, protein: 150, carbs: 200, fat: 60 };
 
 const App: React.FC = () => {
@@ -394,28 +393,6 @@ const App: React.FC = () => {
     
     const hideNavViews: View[] = ['addMeal', 'editMeal', 'mealExtractor'];
     
-    if (!API_KEY) {
-        return (
-            <div className="flex items-center justify-center min-h-screen p-4 text-center bg-background">
-                <div className="bg-card p-8 rounded-2xl shadow-lg max-w-lg animate-fade-in-up">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-danger/10">
-                        <Icon name="info" className="h-6 w-6 text-danger" />
-                    </div>
-                    <h1 className="text-2xl font-bold text-text-primary mt-4">Configuration Error</h1>
-                    <p className="text-text-secondary mt-2">
-                        The Gemini API key is not configured. The application cannot connect to Google AI services.
-                    </p>
-                    <div className="mt-6 text-left bg-background p-4 rounded-lg border border-border">
-                        <p className="font-semibold text-text-primary">How to fix this:</p>
-                        <p className="text-sm text-text-secondary mt-1">
-                            You need to set the <code className="bg-border px-1 py-0.5 rounded text-sm font-mono">VITE_GEMINI_API_KEY</code> environment variable on your hosting platform. Please consult your provider's documentation for instructions on how to set environment variables for your deployment.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className={`font-sans bg-card dark:bg-background text-text-primary min-h-screen`}>
             <div className="relative">

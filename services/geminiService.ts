@@ -3,15 +3,11 @@ import { ExtractedMealForReview, MealCategory } from '../types';
 
 let ai: GoogleGenAI | null = null;
 
-// Lazy initialization of the GoogleGenAI instance to prevent crash on load if API key is missing.
+// Lazy initialization of the GoogleGenAI instance.
 const getAi = () => {
     if (!ai) {
-        const apiKey = process.env.API_KEY;
-        if (!apiKey) {
-            // This state is handled by the UI in App.tsx, but this is a safeguard.
-            throw new Error("Gemini API key not found. Please set VITE_GEMINI_API_KEY in your environment.");
-        }
-        ai = new GoogleGenAI({ apiKey });
+        // The API key is automatically provided by the environment.
+        ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     }
     return ai;
 };
